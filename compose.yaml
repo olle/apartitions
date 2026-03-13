@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:18.3
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/18/data
+
+  minio:
+    image: bitnami/minio:2025.4.22
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/bitnami/minio/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: password
+
+  createbuckets:
+    image: bitnami/minio-client:2025.5.21
+    depends_on:
+      - "minio"
+    environment:
+      MC_HOST_localminio: http://minio:password@minio:9000
+    volumes:
+      - ./scripts:/scripts:ro
+    entrypoint: "/bin/sh /scripts/create-bucket.sh"
+
+volumes:
+  postgres:
+    driver: local
+  minio:
+    driver: local
