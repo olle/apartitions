@@ -2,8 +2,6 @@ package com.studiomediatech.bugs.apartition;
 
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.IntStream;
 import org.apache.commons.io.FileUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -37,40 +35,40 @@ class DbRepository {
   @Transactional
   public void createDataFixtures(Props props) {
 
-    int batches = props.getBatches();
-    int batchSize = props.getBatchSize();
-
     System.out.println(
-        "GENERATING %d TEST DATA ENTRIES IN BATCHES OF %d"
-            .formatted(batches * batchSize, batchSize));
+        "GENERATING %d TEST DATA ENTRIES SPREAD OVER %d DAY(S)."
+            .formatted(props.getSize(), props.getDays()));
 
-    var total = new LongAdder();
-    for (AtomicInteger i = new AtomicInteger(); i.getAndIncrement() < batches; ) {
-      var batch =
-          IntStream.range(0, batchSize)
-              .mapToObj(_ -> generate(props, total))
-              .map(value -> Map.of("value", value))
-              .toList();
+    int entries = props.getSize();
+    int batchSize = props.getBatch();
 
+    while (entries > 0) {
+      int nextBatch = entries < batchSize ? entries : batchSize;
       jdbc.batchUpdate(
-          "INSERT INTO data (value) VALUES (:value)", SqlParameterSourceUtils.createBatch(batch));
+          "INSERT INTO data (created, value) VALUES ((NOW() + :days::INTERVAL)::TIMESTAMPTZ, :value)",
+          SqlParameterSourceUtils.createBatch(
+              IntStream.range(0, nextBatch).mapToObj(_ -> generate(props)).toList()));
       System.out.print(".");
+      entries = Math.max(entries - batchSize, 0);
     }
 
     System.out.println("");
   }
 
-  private String generate(Props props, LongAdder total) {
+  private Map<String, Object> generate(Props props) {
 
     ThreadLocalRandom random = ThreadLocalRandom.current();
     int size = random.nextInt(props.getMinBytes(), props.getMaxBytes());
-    total.add(size);
+    int day = random.nextInt(-1 * props.getDays() / 2, props.getDays() / 2);
 
-    return random
-        .ints('a', 'z' + 1)
-        .limit(size)
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
+    String value =
+        random
+            .ints('a', 'z' + 1)
+            .limit(size)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+
+    return Map.of("value", value, "days", "'%d days'".formatted(day));
   }
 
   @Transactional(readOnly = true)

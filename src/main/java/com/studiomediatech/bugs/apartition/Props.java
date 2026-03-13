@@ -6,12 +6,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Props {
 
   private boolean debug = false;
+
+  private int size = 1100;
+  private int batch = 200;
   private int minBytes = 800;
   private int maxBytes = 2500;
-  private int batchSize = 240;
-  private int batches = 200;
-  private int threads = 2;
-  private String memoryLimit = "90MiB";
+  private int days = 6;
+
+  private int threads = 5;
+  private String memoryLimit = "1GB";
 
   public boolean isDebug() {
     return debug;
@@ -19,6 +22,22 @@ public class Props {
 
   public void setDebug(boolean debug) {
     this.debug = debug;
+  }
+
+  public int getSize() {
+    return size;
+  }
+
+  public void setSize(int size) {
+    this.size = size;
+  }
+
+  public int getBatch() {
+    return batch;
+  }
+
+  public void setBatch(int batch) {
+    this.batch = batch;
   }
 
   public int getMinBytes() {
@@ -37,22 +56,6 @@ public class Props {
     this.maxBytes = maxBytes;
   }
 
-  public int getBatchSize() {
-    return batchSize;
-  }
-
-  public void setBatchSize(int batchSize) {
-    this.batchSize = batchSize;
-  }
-
-  public int getBatches() {
-    return batches;
-  }
-
-  public void setBatches(int batches) {
-    this.batches = batches;
-  }
-
   public int getThreads() {
     return threads;
   }
@@ -67,5 +70,13 @@ public class Props {
 
   public void setMemoryLimit(String memoryLimit) {
     this.memoryLimit = memoryLimit;
+  }
+
+  public int getDays() {
+    return days;
+  }
+
+  public void setDays(int days) {
+    this.days = days;
   }
 }
