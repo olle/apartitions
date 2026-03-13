@@ -20,8 +20,9 @@ down:
 	${CNTR} compose down
 
 .PHONY: clean c
-clean c:
+clean c: up
 	${MVN} clean
+	${CNTR} compose down --volumes --remove-orphans
 
 ${MVN}:
 	@echo "Please install the maven wrapper."
