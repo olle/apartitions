@@ -23,14 +23,14 @@ class DbRepository {
   @Transactional
   public void init() {
     jdbc.update(
-"""
-CREATE TABLE IF NOT EXISTS data (
-    id SERIAL PRIMARY KEY
-  , created TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  , value TEXT NOT NULL
-);
-TRUNCATE data RESTART IDENTITY;
-""",
+        """
+				CREATE TABLE IF NOT EXISTS data (
+				    id SERIAL PRIMARY KEY
+				  , created TIMESTAMPTZ NOT NULL DEFAULT NOW()
+				  , value TEXT NOT NULL
+				);
+				TRUNCATE data RESTART IDENTITY;
+				""",
         Map.of());
   }
 
@@ -58,9 +58,6 @@ TRUNCATE data RESTART IDENTITY;
     }
 
     System.out.println("");
-    System.out.println(
-        "DONE, GENERATED %s TEST FIXTURE DATA"
-            .formatted(FileUtils.byteCountToDisplaySize(total.sum())));
   }
 
   private String generate(Props props, LongAdder total) {
@@ -74,5 +71,30 @@ TRUNCATE data RESTART IDENTITY;
         .limit(size)
         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
         .toString();
+  }
+
+  @Transactional(readOnly = true)
+  public void report() {
+
+    var total =
+        (Number)
+            jdbc.queryForList(
+                    """
+				WITH stats AS (
+				  SELECT AVG(pg_column_size(value)) AS avg_value_size
+				  FROM data
+				  LIMIT 1000
+				)
+				SELECT
+				  (COUNT(*) * (SELECT avg_value_size FROM stats))::INT AS total_size
+				FROM data
+				""",
+                    Map.of())
+                .iterator()
+                .next()
+                .get("total_size");
+
+    System.out.println(
+        "DONE, GENERATED %s TEST FIXTURE DATA".formatted(FileUtils.byteCountToDisplaySize(total)));
   }
 }

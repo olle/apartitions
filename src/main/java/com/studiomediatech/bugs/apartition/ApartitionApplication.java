@@ -22,10 +22,12 @@ public class ApartitionApplication {
 
   @EventListener(ApplicationReadyEvent.class)
   public void onApplicationReady() {
-    System.out.println("RUNNING...." + System.getProperty("DAYS", "365"));
+    var start = System.currentTimeMillis();
+    System.out.println("STARTING...");
     db.init();
     db.createDataFixtures(props);
-    var start = System.currentTimeMillis();
+    db.report();
+    System.out.println(">> " + Duration.ofMillis(System.currentTimeMillis() - start));
     archive.archiveData();
     System.out.println("DONE " + Duration.ofMillis(System.currentTimeMillis() - start));
   }

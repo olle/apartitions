@@ -6,12 +6,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class Props {
 
   private boolean debug = false;
-  private int minBytes = 1400;
-  private int maxBytes = 2000;
-  private int batchSize = 100;
-  private int batches = 100;
-  private int threads = 3;
-  private String memoryLimit = "1GB";
+  private int minBytes = 800;
+  private int maxBytes = 2500;
+  private int batchSize = 240;
+  private int batches = 200;
+  private int threads = 2;
+  private String memoryLimit = "90MiB";
 
   public boolean isDebug() {
     return debug;
