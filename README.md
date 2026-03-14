@@ -9,8 +9,8 @@ https://github.com/duckdb/duckdb/issues/11817.
 
 ## Quickstart
 
-Prerequisites: Docker or Podman installed on your machine. Java 25+ installed
-on your machine.
+**Prerequisites**: Docker or Podman installed on your machine. Java 25+
+installed on your machine.
 
 To get started quickly, use the provided `Makefile` targets.
 
