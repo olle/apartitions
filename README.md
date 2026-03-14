@@ -27,8 +27,8 @@ volumes.
 
 ### Configuration properties
 
-The application uses the following environment variables (prefixed with
-`ARCHIVE_`):
+The application uses the following configuration properties, either set from
+the environment or provided in a Spring Boot configuration.
 
 - `ARCHIVE_SIZE` (int, default: `10000`) - Total number of records to generate
   in the database, for archiving.
