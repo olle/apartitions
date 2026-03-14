@@ -23,13 +23,12 @@ public class ApartitionApplication {
   @EventListener(ApplicationReadyEvent.class)
   public void onApplicationReady() {
     var start = System.currentTimeMillis();
-    System.out.println("STARTING...");
     db.init();
-    db.createDataFixtures(props);
+    db.createData(props);
     db.report();
     System.out.println(">> " + Duration.ofMillis(System.currentTimeMillis() - start));
-    archive.archiveData(props);
-    System.out.println("DONE " + Duration.ofMillis(System.currentTimeMillis() - start));
+    archive.archiveData();
     archive.report();
+    System.out.println("FINISHED IN " + Duration.ofMillis(System.currentTimeMillis() - start));
   }
 }

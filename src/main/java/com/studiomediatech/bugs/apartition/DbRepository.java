@@ -35,7 +35,7 @@ class DbRepository {
   }
 
   @Transactional
-  public void createDataFixtures(Props props) {
+  public void createData(Props props) {
 
     System.out.println(
         "GENERATING %d TEST DATA ENTRIES SPREAD OVER %d DAY(S)."
