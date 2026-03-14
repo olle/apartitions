@@ -5,16 +5,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "archive")
 public class Props {
 
-  private boolean debug = false;
-
-  private int size = 1100;
-
+  private int size = 10_000;
   private int minBytes = 800;
   private int maxBytes = 2500;
   private int days = 6;
 
   private int threads = 3;
   private String memoryLimit = "1GB";
+
+  private boolean debug = false;
 
   public boolean isDebug() {
     return debug;

@@ -25,7 +25,7 @@ make down  ## Stop services.
 The application uses the following environment variables (prefixed with
 `ARCHIVE_`):
 
-- `ARCHIVE_SIZE` (int, default: `1100`) - Total number of records to generate
+- `ARCHIVE_SIZE` (int, default: `10000`) - Total number of records to generate
   in the database, for archiving.
 
 - `ARCHIVE_MIN_BYTES` (int, default: `800`) - Minimum size in bytes for each
@@ -45,4 +45,17 @@ The application uses the following environment variables (prefixed with
   DuckDB for the archiving process. https://duckdb.org/docs/stable/configuration/overview#global-configuration-options
 
 - `ARCHIVE_DEBUG` (boolean, default: `false`) - Enable debug logging in DuckDB.
+
+## Example scenario
+
+```sh
+make up
+ARCHIVE_SIZE=1000000 ARCHIVE_DAYS=200 make
+```
+
+This will generate 1 million records in the PostgreSQL database, with
+`created_at` timestamps spread out over the last 200 days. Then it will run the
+archiving process, which will read the data from PostgreSQL, write gzipped CSV
+files to MinIO in hive-partitioned folders (by year and month), and then read
+the data back from MinIO to verify the integrity of the archived data.
 
