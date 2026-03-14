@@ -34,7 +34,7 @@ The application uses the following environment variables (prefixed with
 - `ARCHIVE_MAX_BYTES` (int, default: `2500`) - Maximum size in bytes for each
   generated record. Used to create variability in record sizes (random).
 
-- `ARCHIVE_DAYS` (int, default: `6`) - Number of days +/- from the current date
+- `ARCHIVE_DAYS` (int, default: `7`) - Number of days +/- from the current date
   to spread out the generated records in the database. This creates variability
   in the partition sizes when archiving.
 
@@ -48,14 +48,16 @@ The application uses the following environment variables (prefixed with
 
 ## Example scenario
 
+### `Out of Memory Error: could not allocate block of size 76.5 MiB (944.1 MiB/953.6 MiB used)`
+
+This tests creates around 15MB of data in the database, spread over 30 days, and
+when the archiving process runs, it will hit the "Out of Memory Error" in
+DuckDB, due to the default memory limit of 1GB being exceeded by the size of the
+data being processed.
+
+https://github.com/duckdb/duckdb/issues/11817.
+
 ```sh
 make up
-ARCHIVE_SIZE=1000000 ARCHIVE_DAYS=200 make
+ARCHIVE_DAYS=30 make
 ```
-
-This will generate 1 million records in the PostgreSQL database, with
-`created_at` timestamps spread out over the last 200 days. Then it will run the
-archiving process, which will read the data from PostgreSQL, write gzipped CSV
-files to MinIO in hive-partitioned folders (by year and month), and then read
-the data back from MinIO to verify the integrity of the archived data.
-
