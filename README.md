@@ -25,26 +25,24 @@ make down  ## Stop services.
 The application uses the following environment variables (prefixed with
 `ARCHIVE_`):
 
-- `ARCHIVE_DEBUG` (boolean, default: `false`) - Enable debug logging for
-  archiving operations.
+- `ARCHIVE_SIZE` (int, default: `1100`) - Total number of records to generate
+  in the database, for archiving.
 
-- `ARCHIVE_SIZE` (int, default: `1100`) - Target number of records per
-  partition.
+- `ARCHIVE_MIN_BYTES` (int, default: `800`) - Minimum size in bytes for each
+  generated record. Used to create variability in record sizes (random).
 
-- `ARCHIVE_BATCH` (int, default: `200`) - Number of records to process in each
-  batch.
+- `ARCHIVE_MAX_BYTES` (int, default: `2500`) - Maximum size in bytes for each
+  generated record. Used to create variability in record sizes (random).
 
-- `ARCHIVE_MIN_BYTES` (int, default: `800`) - Minimum file size in bytes for
-  archiving.
+- `ARCHIVE_DAYS` (int, default: `6`) - Number of days +/- from the current date
+  to spread out the generated records in the database. This creates variability
+  in the partition sizes when archiving.
 
-- `ARCHIVE_MAX_BYTES` (int, default: `2500`) - Maximum file size in bytes for
-  archiving.
+- `ARCHIVE_THREADS` (int, default: `3`) - Number of threads to use in DuckDB for
+  parallel processing. https://duckdb.org/docs/stable/configuration/overview#global-configuration-options
 
-- `ARCHIVE_DAYS` (int, default: `6`) - Number of days to retain archived data.
+- `ARCHIVE_MEMORY_LIMIT` (string, default: `"1GB"`) - Memory limit to use in 
+  DuckDB for the archiving process. https://duckdb.org/docs/stable/configuration/overview#global-configuration-options
 
-- `ARCHIVE_THREADS` (int, default: `5`) - Number of threads for parallel
-  processing.
-
-- `ARCHIVE_MEMORY_LIMIT` (string, default: `"1GB"`) - Memory limit for the
-  archiving process.
+- `ARCHIVE_DEBUG` (boolean, default: `false`) - Enable debug logging in DuckDB.
 
