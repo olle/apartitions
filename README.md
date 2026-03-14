@@ -15,10 +15,15 @@ on your machine.
 To get started quickly, use the provided `Makefile` targets.
 
 ```sh
-make up    ## Start all services (PostgreSQL, MinIO, etc.)
-make       ## Builds and runs the Java Spring Boot application, executing the example scenario.
-make down  ## Stop services.
+make up    ## Start all containers
+make       ## Builds and runs the app (default example scenario)
 ```
+
+Any consecutive invocation of `make` will clean the target S3 bucket and run
+the demo scenario again.
+
+Stop all the containers with `make down` or `make clean` to also remove the
+volumes.
 
 ### Configuration properties
 
