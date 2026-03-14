@@ -51,34 +51,34 @@ class Config {
       DuckDBConnection conn = (DuckDBConnection) DriverManager.getConnection("jdbc:duckdb:");
       conn.createStatement()
           .execute(
-"""
--- Configure thread/memory limits
-SET GLOBAL threads=%d;
-SET GLOBAL memory_limit='%s';
--- Connect to local MinIO/S3
-INSTALL httpfs;
-LOAD httpfs;
-CREATE TEMPORARY SECRET IF NOT EXISTS minio (
-  TYPE s3,
-  KEY_ID '%s',
-  SECRET '%s',
-  ENDPOINT 'localhost:9000',
-  USE_SSL false,
-  URL_STYLE path
-);
--- Connect to local PostgreSQL
-INSTALL postgres;
-LOAD postgres;
-CREATE TEMPORARY SECRET IF NOT EXISTS postgresql (
-  TYPE postgres,
-  HOST 'localhost',
-  PORT 5432,
-  DATABASE 'postgres',
-  USER '%s',
-  PASSWORD '%s'
-);
-ATTACH IF NOT EXISTS '' AS db (TYPE postgres, SECRET postgresql);
-"""
+              """
+					-- Configure thread/memory limits
+					SET GLOBAL threads=%d;
+					SET GLOBAL memory_limit='%s';
+					-- Connect to local MinIO/S3
+					INSTALL httpfs;
+					LOAD httpfs;
+					CREATE TEMPORARY SECRET IF NOT EXISTS minio (
+					  TYPE s3,
+					  KEY_ID '%s',
+					  SECRET '%s',
+					  ENDPOINT 'localhost:9000',
+					  USE_SSL false,
+					  URL_STYLE path
+					);
+					-- Connect to local PostgreSQL
+					INSTALL postgres;
+					LOAD postgres;
+					CREATE TEMPORARY SECRET IF NOT EXISTS postgresql (
+					  TYPE postgres,
+					  HOST 'localhost',
+					  PORT 5432,
+					  DATABASE 'postgres',
+					  USER '%s',
+					  PASSWORD '%s'
+					);
+					ATTACH IF NOT EXISTS '' AS db (TYPE postgres, SECRET postgresql);
+					"""
                   .formatted(
                       props.getThreads(),
                       props.getMemoryLimit(),

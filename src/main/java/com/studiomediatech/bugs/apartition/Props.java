@@ -8,12 +8,12 @@ public class Props {
   private boolean debug = false;
 
   private int size = 1100;
-  private int batch = 200;
+
   private int minBytes = 800;
   private int maxBytes = 2500;
   private int days = 6;
 
-  private int threads = 5;
+  private int threads = 3;
   private String memoryLimit = "1GB";
 
   public boolean isDebug() {
@@ -30,14 +30,6 @@ public class Props {
 
   public void setSize(int size) {
     this.size = size;
-  }
-
-  public int getBatch() {
-    return batch;
-  }
-
-  public void setBatch(int batch) {
-    this.batch = batch;
   }
 
   public int getMinBytes() {

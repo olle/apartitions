@@ -13,20 +13,22 @@ class ArchiveRepository {
     this.duckDb = duckDb;
   }
 
-  public void archiveData() {
-    showDatabaseInfoAndExists();
+  public void archiveData(Props props) {
+    if (props.isDebug()) {
+      showDatabaseInfoAndExists();
+    }
     copyPartitionedData();
   }
 
   private void showDatabaseInfoAndExists() {
-    System.out.println(duckDb.queryForList("PRAGMA database_size;", Map.of()));
-    System.out.println(
-        duckDb.queryForList(
+    duckDb.queryForList("PRAGMA database_size;", Map.of()).forEach(System.out::println);
+    duckDb
+        .queryForList(
 """
-SELECT ((SELECT COUNT(*) FROM glob('s3://archive/data/*/*/*/*.csv.gz')) > 0) AS archived_data_exists
-;
+SELECT ((SELECT COUNT(*) FROM glob('s3://archive/data/*/*/*/*.csv.gz')) > 0) AS archived_data_exists;
 """,
-            Map.of()));
+            Map.of())
+        .forEach(System.out::println);
   }
 
   private void copyPartitionedData() {
@@ -53,5 +55,14 @@ COPY
 ;
 """,
         Map.of());
+  }
+
+  public void report() {
+    duckDb
+        .queryForList(
+            "SELECT COUNT(*) AS archived_entries FROM read_csv('s3://archive/data/*/*/*/*.csv.gz')",
+            Map.of())
+        .stream()
+        .forEach(System.out::println);
   }
 }

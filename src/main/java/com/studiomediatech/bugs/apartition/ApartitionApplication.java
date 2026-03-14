@@ -28,7 +28,8 @@ public class ApartitionApplication {
     db.createDataFixtures(props);
     db.report();
     System.out.println(">> " + Duration.ofMillis(System.currentTimeMillis() - start));
-    archive.archiveData();
+    archive.archiveData(props);
     System.out.println("DONE " + Duration.ofMillis(System.currentTimeMillis() - start));
+    archive.report();
   }
 }

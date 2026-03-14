@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class DbRepository {
 
+  private static final int BATCH_SIZE = 300;
+
   private final NamedParameterJdbcTemplate jdbc;
 
   public DbRepository(NamedParameterJdbcTemplate jdbc) {
@@ -40,16 +42,17 @@ class DbRepository {
             .formatted(props.getSize(), props.getDays()));
 
     int entries = props.getSize();
-    int batchSize = props.getBatch();
 
     while (entries > 0) {
-      int nextBatch = entries < batchSize ? entries : batchSize;
+      int nextBatch = entries < BATCH_SIZE ? entries : BATCH_SIZE;
+
       jdbc.batchUpdate(
           "INSERT INTO data (created, value) VALUES ((NOW() + :days::INTERVAL)::TIMESTAMPTZ, :value)",
           SqlParameterSourceUtils.createBatch(
               IntStream.range(0, nextBatch).mapToObj(_ -> generate(props)).toList()));
+
       System.out.print(".");
-      entries = Math.max(entries - batchSize, 0);
+      entries = Math.max(entries - BATCH_SIZE, 0);
     }
 
     System.out.println("");
@@ -58,6 +61,7 @@ class DbRepository {
   private Map<String, Object> generate(Props props) {
 
     ThreadLocalRandom random = ThreadLocalRandom.current();
+
     int size = random.nextInt(props.getMinBytes(), props.getMaxBytes());
     int day = random.nextInt(-1 * props.getDays() / 2, props.getDays() / 2);
 
