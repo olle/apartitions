@@ -10,7 +10,7 @@ MVN:=./mvnw
 .PHONY: run up down init-bucket clean c tidy spotless pretty format f
 
 run: init-bucket
-	${MVN} spring-boot:run
+	${MVN} spring-boot:run -Dspring-boot.run.jvmArguments="-Djava.library.path=$(PWD)/lib"
 
 up:
 	${CNTR} compose up -d
