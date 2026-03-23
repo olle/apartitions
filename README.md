@@ -7,6 +7,9 @@ hive-partitioned folders.
 This tool was created to help in reproducing the issue described in
 https://github.com/duckdb/duckdb/issues/11817.
 
+**NOTE: Currently only runs on macOS due to the embedded custom-built library
+ under `lib/`.**
+
 ## Quickstart
 
 **Prerequisites**: Docker or Podman installed on your machine. Java 25+
