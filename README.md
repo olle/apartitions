@@ -43,7 +43,7 @@ the environment or provided in a Spring Boot configuration.
   to spread out the generated records in the database. This creates variability
   in the partition sizes when archiving.
 
-- `ARCHIVE_THREADS` (int, default: `3`) - Number of threads to use in DuckDB for
+- `ARCHIVE_THREADS` (int, default: `1`) - Number of threads to use in DuckDB for
   parallel processing. https://duckdb.org/docs/stable/configuration/overview#global-configuration-options
 
 - `ARCHIVE_MEMORY_LIMIT` (string, default: `"1GB"`) - Memory limit to use in 
