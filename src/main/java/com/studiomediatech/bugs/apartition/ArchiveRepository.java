@@ -15,8 +15,8 @@ class ArchiveRepository {
 
   public void archiveData() {
     System.out.println("ARCHIVING DATA WITH DuckDB `COPY/TO`.");
-    showDatabaseInfoAndExists();
-    archivedDataExists();
+    //    showDatabaseInfoAndExists();
+    //    archivedDataExists();
     copyPartitionedData();
   }
 
