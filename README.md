@@ -43,7 +43,7 @@ the environment or provided in a Spring Boot configuration.
   to spread out the generated records in the database. This creates variability
   in the partition sizes when archiving.
 
-- `ARCHIVE_THREADS` (int, default: `3`) - Number of threads to use in DuckDB for
+- `ARCHIVE_THREADS` (int, default: `1`) - Number of threads to use in DuckDB for
   parallel processing. https://duckdb.org/docs/stable/configuration/overview#global-configuration-options
 
 - `ARCHIVE_MEMORY_LIMIT` (string, default: `"1GB"`) - Memory limit to use in 
@@ -66,3 +66,34 @@ https://github.com/duckdb/duckdb/issues/11817.
 make up
 ARCHIVE_DAYS=30 make
 ```
+
+_I've added some simple print statements to [duckdb-java] in an effort to better
+ understand what's happening in the `standard_buffer_manager.cpp`, where the
+ exception in thrown, and the last record of the allocations looks like this:_
+
+```
+...
+AllocateTemporaryMemory EXTENSION size: 76.4 MiB used: 944.9 MiB
+RegisterMemory EXTENSION size: 76.5 MiB used: 944.9 MiB
+EvictBlocksOrThrow EXTENSION size: 76.5 MiB used: 944.9 MiB
+MemoryInformation:
+	 BASE_TABLE { size: 0 bytes, evicted: 0 bytes}
+	 HASH_TABLE { size: 0 bytes, evicted: 0 bytes}
+	 PARQUET_READER { size: 0 bytes, evicted: 0 bytes}
+	 CSV_READER { size: 0 bytes, evicted: 0 bytes}
+	 ORDER_BY { size: 0 bytes, evicted: 0 bytes}
+	 ART_INDEX { size: 0 bytes, evicted: 0 bytes}
+	 COLUMN_DATA { size: 20.2 MiB, evicted: 2.0 MiB}
+	 METADATA { size: 0 bytes, evicted: 0 bytes}
+	 OVERFLOW_STRINGS { size: 0 bytes, evicted: 0 bytes}
+	 IN_MEMORY_TABLE { size: 0 bytes, evicted: 0 bytes}
+	 ALLOCATOR { size: 4.4 MiB, evicted: 0 bytes}
+	 EXTENSION { size: 918.0 MiB, evicted: 0 bytes}
+	 TRANSACTION { size: 0 bytes, evicted: 0 bytes}
+	 EXTERNAL_FILE_CACHE { size: 0 bytes, evicted: 0 bytes}
+	 WINDOW { size: 0 bytes, evicted: 0 bytes}
+```
+
+  [duckdb-java]: https://github.com/olle/duckdb-java/tree/11817-good-old-printf-debugging
+
+

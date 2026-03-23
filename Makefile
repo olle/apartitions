@@ -9,8 +9,14 @@ MVN:=./mvnw
 
 .PHONY: run up down init-bucket clean c tidy spotless pretty format f
 
+##
+## TODO: JEMALLOC config may help?
+#	DUCKDB_JE_MALLOC_CONF="confirm_conf:true,stats_print:true"
+##
+
 run: init-bucket
-	${MVN} spring-boot:run
+	${MVN} spring-boot:run \
+		-Dspring-boot.run.jvmArguments="--enable-native-access=ALL-UNNAMED -Djava.library.path=$(PWD)/lib"
 
 up:
 	${CNTR} compose up -d

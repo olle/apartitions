@@ -55,6 +55,9 @@ class Config {
 					-- Configure thread/memory limits
 					SET GLOBAL threads=%d;
 					SET GLOBAL memory_limit='%s';
+					SET preserve_insertion_order=false;
+					SET s3_uploader_thread_limit=1;
+					SET write_buffer_row_group_count=1;
 					-- Connect to local MinIO/S3
 					INSTALL httpfs;
 					LOAD httpfs;

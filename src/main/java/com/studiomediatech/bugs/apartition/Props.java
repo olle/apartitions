@@ -10,7 +10,7 @@ public class Props {
   private int maxBytes = 2500;
   private int days = 7;
 
-  private int threads = 3;
+  private int threads = 1;
   private String memoryLimit = "1GB";
 
   private boolean debug = false;

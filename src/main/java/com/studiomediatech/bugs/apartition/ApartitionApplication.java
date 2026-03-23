@@ -27,8 +27,15 @@ public class ApartitionApplication {
     db.createData(props);
     db.report();
     System.out.println(">> " + Duration.ofMillis(System.currentTimeMillis() - start));
+    //    waitForEnterKey();
     archive.archiveData();
-    archive.report();
+    // archive.report();
     System.out.println("FINISHED IN " + Duration.ofMillis(System.currentTimeMillis() - start));
+  }
+
+  @SuppressWarnings("resource")
+  private void waitForEnterKey() {
+    System.out.println("Press Enter to start archiving...");
+    new java.util.Scanner(System.in).nextLine();
   }
 }
